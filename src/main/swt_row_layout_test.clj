@@ -7,12 +7,19 @@
   (when-not (. shell (isDisposed))
     (if-not (. display (readAndDispatch))
       (. display (sleep)))
-    (recur display shell)))
+    (recur display shell))
+  (. display (dispose)))
+
+(defn make-row-layout []
+  (let [layout (RowLayout.)]
+    (set! (. layout wrap) true)
+    layout))
 
 (defn run-gui []
   (let [display (Display.)
         shell   (doto (Shell. display)
-                  (.setLayout (make-row-layout)))
+                  (.setLayout (make-row-layout))
+                  (.setText "Basic RowLayout - Try resizing the window"))
 
         _ (doto (Button. shell (. SWT PUSH))
             (.setText "B1"))
@@ -25,7 +32,8 @@
       (.pack)
       (.open))
 
-    (gui-loop shell display)))
+    (println "Try resizing the window")
+    (gui-loop display shell)))
 
 (defn -main [& args]
   (run-gui))
