@@ -25,16 +25,19 @@
     (aset arr 0 (first styles))
     arr))
 
-(defn set-style-get-pos [text-area text search-str pos styles]
-  (.setStyleRanges text-area 0 0 (int-array 2 [pos (.length search-str)])
-                   (make-style-range-array styles))
-  (.indexOf text search-str (inc pos)))
+(defn all-occurrences [text substr]
+  (let [helper (fn [res pos]
+                 (if (not= -1 pos)
+                   (recur (conj res pos)
+                          (.indexOf text substr (inc pos)))
+                   res))]
+    (helper [] (.indexOf text substr))))
 
 (defn draw-box [search-str text-area text styles]
-  (loop [pos (.indexOf text search-str)]
-    (if (not= -1 pos)
-      (recur (set-style-get-pos text-area text search-str pos styles))
-      nil)))
+  (let [style-array (make-style-range-array styles)]
+    (doseq [pos (all-occurrences text search-str)]
+      (.setStyleRanges text-area 0 0 (int-array 2 [pos (.length search-str)])
+                       style-array))))
 
 (defn gui-main []
   (let [search-str "box"
@@ -52,6 +55,7 @@
 
         text-area (doto (StyledText. shell (. SWT NONE))
                     (.setText contents))]
+
     (draw-box search-str text-area contents styles)
 
     (doto shell
