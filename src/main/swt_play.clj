@@ -5,6 +5,7 @@
            [org.eclipse.swt.widgets Display Shell Button Text Label]
            [org.eclipse.swt.layout RowData RowLayout]
            [org.eclipse.swt.events SelectionAdapter]
+           [org.eclipse.swt.custom StyledText]
 ))
 
 (defn gui-loop [display shell]
