@@ -5,8 +5,7 @@
            [org.eclipse.swt.widgets Display Shell Button Text Label]
            [org.eclipse.swt.layout RowData RowLayout]
            [org.eclipse.swt.events SelectionAdapter]
-           [org.eclipse.swt.custom StyledText]
-))
+           [org.eclipse.swt.custom StyledText]))
 
 (defn gui-loop [display shell]
   (when-not (. shell (isDisposed))
@@ -16,6 +15,7 @@
 
 (def ^:dynamic *display* (Display.))
 (def ^:dynamic *shell* (doto (Shell. *display*)
+                         (.pack)
                          (.open)
                          (.setText "Something...")))
 
@@ -31,6 +31,14 @@
 
 (defn make-eval-string [raw-str]
   (str "(do (in-ns 'main.swt-play) " raw-str ")"))
+
+;; (deftype ClickedEvent [arg]
+;;   SelectionAdapter)
+
+;; (defn clicked-event [shell]
+;;   (proxy [ClickedEvent] [shell]
+;;     (widgetSelected [evt]
+;;       (println (to-array (.getChildren shell))))))
 
 (defn gui-main []
   (let [label (doto (Label. *shell* (. SWT NONE))
@@ -51,19 +59,20 @@
                                   (make-eval-string (. (@*controls* :text)
                                                        (getText))))
 
-                         ;; (.setText (@*controls* :label) "aoeu")
-
                          ;; This works "(println @main.swt-play/*controls*)"
                          ;; This doesn't "(println @*controls*)"
                          ))))
 
         cancel-button (doto (Button. *shell* (. SWT PUSH))
                         (.setText "Cancel")
-                        (.addSelectionListener
-                         (proxy [SelectionAdapter] []
-                           (widgetSelected [evt]
-                             (println (to-array (. *shell* (getChildren))))
-                             (. (@*controls* :display) (dispose))))))]
+                        ;; (.addSelectionListener (clicked-event *shell*)
+                        ;;  ;; (proxy [SelectionAdapter] []
+                        ;;  ;;   (widgetSelected [evt]
+                        ;;  ;;     (println (to-array (. *shell* (getChildren))))
+                        ;;  ;;     ;; (. (@*controls* :display) (dispose))
+                        ;;  ;;     ))
+                        ;;  )
+                        )]
 
     ;; (dosync (alter *controls* conj @*controls*
     ;;                {:text text :label label}))

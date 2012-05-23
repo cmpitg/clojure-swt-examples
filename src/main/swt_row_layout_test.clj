@@ -7,8 +7,7 @@
   (when-not (. shell (isDisposed))
     (if-not (. display (readAndDispatch))
       (. display (sleep)))
-    (recur display shell))
-  (. display (dispose)))
+    (recur display shell)))
 
 (defn make-row-layout []
   (let [layout (RowLayout.)]
@@ -33,7 +32,8 @@
       (.open))
 
     (println "Try resizing the window")
-    (gui-loop display shell)))
+    (gui-loop display shell)
+    (. display (dispose))))
 
 (defn -main [& args]
   (run-gui))

@@ -2,6 +2,7 @@
 /lib
 /classes
 /checkouts
+src/main/swt_wrapper.clj
 pom.xml
 *.jar
 *.class
